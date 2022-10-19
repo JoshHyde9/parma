@@ -9,3 +9,63 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+model Review {
+  id           String    @id @default(uuid())
+  name_on_menu String
+  location     String
+  rating       Float
+  comment      String?
+  sauce        String
+  garnish      String?
+  price        Float
+  topping      Topping[]
+  chips        Chips     @relation(fields: [chipsId], references: [id])
+  salad        Salad     @relation(fields: [saladId], references: [id])
+  created_at   DateTime  @default(now())
+  updated_at   DateTime  @updatedAt
+  saladId      String
+  chipsId      String
+}
+
+model Chips {
+  id         String           @id @default(uuid())
+  reviewId   String           @unique
+  included   Boolean
+  underneath Boolean
+  saltiness  SaltinessStatus
+  crispiness CrispinessStatus
+
+  Review Review[]
+}
+
+model Salad {
+  id         String   @id @default(uuid())
+  reviewId   String   @unique
+  included   Boolean
+  underneath Boolean
+  items      String[]
+  freshness  Boolean
+
+  Review Review[]
+}
+
+model Topping {
+  id         String @id @default(uuid())
+  reviewId   String
+  ingredient String
+
+  review Review @relation(fields: [reviewId], references: [id])
+}
+
+enum SaltinessStatus {
+  NOT_SATLY
+  GOOD_SALT
+  EXTRA_SALTY
+}
+
+enum CrispinessStatus {
+  SOGGY
+  CRISPY
+  TOO_CRISPY
+}
