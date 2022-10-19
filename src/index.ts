@@ -1,12 +1,18 @@
 import express from "express";
 
-const PORT = process.env.PORT || 5000;
+// Routes
+import { saladRouter } from "./routes/salad";
+import { chipsRouter } from "./routes/chips";
+import { reviewRouter } from "./routes/review";
+import { toppingRouter } from "./routes/topping";
 
+const PORT = process.env.PORT || 5000;
 const app = express();
 
-app.get("/", (_, res) => {
-  res.json({ message: "Hello World!" });
-});
+app.use("/salad", saladRouter);
+app.use("/chips", chipsRouter);
+app.use("/review", reviewRouter);
+app.use("/topping", toppingRouter);
 
 app.listen(PORT, () => {
   console.log(`Server started at http://localhost:${PORT}`);
